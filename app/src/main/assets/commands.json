@@ -1,0 +1,11 @@
+[
+  {"prefix":"/","verb":"find",    "description":"Semantic search"},
+  {"prefix":"/","verb":"dup",     "description":"Find duplicate photos"},
+  {"prefix":"/","verb":"blur",    "description":"Find blurry photos"},
+  {"prefix":"/","verb":"receipt", "description":"Find receipts"},
+  {"prefix":"@","verb":"deep",    "description":"Force deep rerank"},
+  {"prefix":"@","verb":"fast",    "description":"CLIP-only, no rerank"},
+  {"prefix":"@","verb":"ocr",     "description":"Search OCR text only"},
+  {"prefix":"@","verb":"person",  "description":"Filter by face cluster"},
+  {"prefix":"@","verb":"like",    "description":"Similar to current photo"}
+]
