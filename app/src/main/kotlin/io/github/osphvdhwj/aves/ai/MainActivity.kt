@@ -115,9 +115,7 @@ class MainActivity : Activity() {
     }
 
     private fun bindCompanion() {
-        val i = Intent(AiCompanionService.ACTION_BIND).apply {
-            setComponent(ComponentName(packageName, AiCompanionService::class.java.name))
-        }
+        val i = Intent(this, AiCompanionService::class.java)
         bindService(i, connection, Context.BIND_AUTO_CREATE)
     }
 
