@@ -11,7 +11,7 @@ class AiCompanionService : Service() {
 
     private val binder = object : IAvesAi.Stub() {
 
-        override fun getInterfaceVersion(): Int = INTERFACE_VERSION
+        override fun getApiVersion(): Int = INTERFACE_VERSION
 
         override fun getCapabilities(): MutableList<String> =
             mutableListOf(CAP_ECHO)

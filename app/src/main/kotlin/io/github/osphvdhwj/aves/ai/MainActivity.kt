@@ -33,7 +33,7 @@ class MainActivity : Activity() {
             service = IAvesAi.Stub.asInterface(binder)
             appendLog("bound: " + (name?.className ?: "?"))
             try {
-                val v = service?.interfaceVersion
+                val v = service?.apiVersion
                 val caps = service?.capabilities ?: emptyList<String>()
                 appendLog("iface version: $v")
                 appendLog("capabilities:  ${caps.joinToString(",")}")
