@@ -1,4 +1,5 @@
 package io.github.osphvdhwj.aves.ai;
+import android.os.Bundle;
 
 oneway interface IAvesAiCallback {
     void onProgress(long requestId, int percent);
