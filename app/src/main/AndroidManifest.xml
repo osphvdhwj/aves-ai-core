@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <permission
+        android:name="io.github.osphvdhwj.aves.ai.permission.BIND_AI_COMPANION"
+        android:protectionLevel="normal" />
+
+    <application
+        android:allowBackup="false"
+        android:label="Aves AI"
+        android:theme="@android:style/Theme.Material.Light">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".AiCompanionService"
+            android:exported="true"
+            android:permission="io.github.osphvdhwj.aves.ai.permission.BIND_AI_COMPANION">
+            <intent-filter>
+                <action android:name="io.github.osphvdhwj.aves.ai.BIND" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>
