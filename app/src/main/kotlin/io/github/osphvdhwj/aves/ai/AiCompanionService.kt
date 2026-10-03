@@ -42,7 +42,10 @@ class AiCompanionService : Service() {
         val out = Bundle().apply {
             putLong(KEY_REQUEST_ID, requestId)
             putString(KEY_CAPABILITY, CAP_ECHO)
-            putString("message", request.getString("message"))
+            putString("raw", request.getString("raw"))
+            putString("prefix", request.getString("prefix"))
+            putString("verb", request.getString("verb"))
+            putString("freeText", request.getString("freeText"))
             putLong("serverTimeMs", System.currentTimeMillis())
             putInt("interfaceVersion", INTERFACE_VERSION)
             putInt("servicePid", Process.myPid())
