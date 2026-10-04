@@ -14,7 +14,7 @@ class AiCompanionService : Service() {
         override fun getApiVersion(): Int = INTERFACE_VERSION
 
         override fun getCapabilities(): MutableList<String> =
-            mutableListOf(CAP_ECHO)
+            mutableListOf(CAP_ECHO, CAP_CHAT)
 
         override fun submit(request: Bundle?, cb: IAvesAiCallback?) {
             if (request == null || cb == null) {
@@ -27,13 +27,13 @@ class AiCompanionService : Service() {
 
             when (capability) {
                 CAP_ECHO -> handleEcho(id, request, cb)
+                CAP_CHAT -> handleChat(id, request, cb)
                 else -> cb.onError(id, ERR_UNSUPPORTED, "unsupported capability: $capability")
             }
         }
 
         override fun cancel(requestId: Long) {
             Log.i(TAG, "cancel id=$requestId")
-            // no long-running jobs yet; nothing to cancel
         }
     }
 
@@ -52,6 +52,49 @@ class AiCompanionService : Service() {
         }
         cb.onProgress(requestId, 100)
         cb.onResult(requestId, out)
+    }
+
+    private fun handleChat(requestId: Long, request: Bundle, cb: IAvesAiCallback) {
+        cb.onProgress(requestId, 0)
+        val text = request.getString("text")?.trim().orEmpty()
+        val reply = buildChatReply(text)
+        val out = Bundle().apply {
+            putLong(KEY_REQUEST_ID, requestId)
+            putString(KEY_CAPABILITY, CAP_CHAT)
+            putString("text", reply)
+            putInt("servicePid", Process.myPid())
+        }
+        cb.onProgress(requestId, 100)
+        cb.onResult(requestId, out)
+    }
+
+    private fun buildChatReply(text: String): String {
+        if (text.isEmpty()) return "Empty message."
+
+        // rule-based for now. Real CLIP / OCR / faces come later.
+        val parts = text.split(Regex("\\s+"), limit = 2)
+        val head = parts[0]
+        val rest = parts.getOrNull(1)?.trim().orEmpty()
+
+        if (!head.startsWith("/") && !head.startsWith("@")) {
+            return "You said: \"$text\"\n\nI don't do free-form chat yet. Try /find, /dup, /blur, or /receipt."
+        }
+
+        return when (head) {
+            "/find" -> if (rest.isEmpty())
+                "Usage: /find <description>"
+            else
+                "Searching for \"$rest\".\n\nSemantic search is not wired yet - this reply comes from the companion over AIDL. Real CLIP scoring lands in a later update."
+            "/dup" -> "Duplicate finder not wired yet."
+            "/blur" -> "Blur detector not wired yet."
+            "/receipt" -> "Receipt finder not wired yet."
+            "@deep" -> "Deep rerank modifier noted. Feature not wired yet."
+            "@fast" -> "Fast mode modifier noted. Feature not wired yet."
+            "@ocr" -> "OCR search modifier noted. Feature not wired yet."
+            "@person" -> "Person filter modifier noted. Feature not wired yet."
+            "@like" -> "Similar-to-current modifier noted. Feature not wired yet."
+            else -> "Unknown command: $head"
+        }
     }
 
     private fun callerDescription(): String {
@@ -77,6 +120,7 @@ class AiCompanionService : Service() {
         const val ACTION_BIND = "io.github.osphvdhwj.aves.ai.BIND"
 
         const val CAP_ECHO = "echo"
+        const val CAP_CHAT = "chat"
 
         const val KEY_REQUEST_ID = "requestId"
         const val KEY_CAPABILITY = "capability"
